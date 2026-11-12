@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="shell" id="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5 4 5.8v5.7c0 4.6 3.2 8.3 8 10 4.8-1.7 8-5.4 8-10V5.8l-8-3.3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h1>IT Support Copilot</h1>
+          <p>Agentic RAG</p>
+        </div>
+      </div>
+
+      <p class="lede">Answers from your private company knowledge first. The web is used only when internal evidence is weak.</p>
+
+      <nav class="workflow" aria-label="LangGraph workflow">
+        <h3>How it answers</h3>
+        <ol>
+          <li><b>Route question</b><span>Pick the best source</span></li>
+          <li><b>Retrieve private KB</b><span>Search company documents</span></li>
+          <li><b>Grade evidence</b><span>Check if it answers you</span></li>
+          <li><b>Web fallback</b><span>Only if evidence is weak</span></li>
+          <li><b>Rewrite and retry</b><span>Refine the search</span></li>
+          <li><b>Grounded answer</b><span>Reply with sources</span></li>
+        </ol>
+      </nav>
+
+      <button id="openUpload" class="upload-btn" type="button">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Add company document
+      </button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title"><span class="status-dot"></span>Enterprise Knowledge Copilot</div>
+        <div class="top-actions">
+          <button id="traceToggle" class="ghost-btn" type="button">Agent trace</button>
+          <span class="pill">Agentic RAG</span>
+        </div>
+      </header>
+
+      <section id="chat" class="chat-area" aria-live="polite">
+        <div class="message assistant">
+          <div class="avatar">AI</div>
+          <div class="bubble">
+            <strong>How can I help with IT support?</strong>
+            <p>Ask about VPN, passwords, devices or access. Questions that need current vendor information will use the web.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="composer-wrap">
+        <div class="examples">
+          <button class="example" type="button">How do I connect to the company VPN?</button>
+          <button class="example" type="button">What is our password reset policy?</button>
+          <button class="example" type="button">What is the latest Microsoft Teams outage guidance?</button>
+        </div>
+        <form id="chatForm" class="composer">
+          <textarea id="question" rows="1" placeholder="Ask an IT support question…" required></textarea>
+          <button type="submit" class="send-btn">
+            Ask agent
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+        <p class="hint">Enter to send, Shift + Enter for a new line.</p>
+      </section>
+    </main>
+
+    <aside class="trace-panel">
+      <h2>Agent trace</h2>
+      <p class="muted">Follow each LangGraph decision as the request runs.</p>
+      <div id="trace" class="trace-list"><div class="empty">Ask a question to see the steps here.</div></div>
+      <div class="source-box">
+        <span>Final source</span>
+        <strong id="sourceUsed">—</strong>
+      </div>
+    </aside>
+  </div>
+
+  <div id="uploadModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="uploadTitle">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="uploadTitle">Add company document</h2><button id="closeUpload" type="button" aria-label="Close">×</button></div>
+      <p class="muted">Upload a PDF, TXT, Markdown or DOCX file. It is split into chunks, embedded and indexed in Pinecone.</p>
+      <label class="field">Admin API key
+        <input id="adminKey" type="password" placeholder="Enter admin key" autocomplete="off" />
+      </label>
+      <label class="dropzone" for="fileInput">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span id="fileName">Choose a file</span>
+        <small>PDF, TXT, MD or DOCX</small>
+      </label>
+      <input id="fileInput" type="file" accept=".pdf,.txt,.md,.docx" hidden />
+      <button id="uploadBtn" class="send-btn full" type="button">Index document</button>
+      <div id="uploadStatus" class="upload-status"></div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
